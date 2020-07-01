@@ -1,11 +1,21 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%
+	HttpSession sess = request.getSession();
+	String hp_code = null;
+	if(sess.getAttribute("hp_code")==null){
+		response.sendRedirect("./loginFail.jsp");
+	}else{
+	    hp_code = sess.getAttribute("hp_code").toString();
+	}
+	
+%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>QR스캔페이지</title>
-<meta http-equiv="refresh" content="18; url=./kiosk.jsp">
+<!-- <meta http-equiv="refresh" content="18; url=./kiosk.jsp"> -->
 <style type="text/css">
 	#d{
 		background-color: #CEF279;
@@ -71,46 +81,42 @@
 	function qrScan(qrcode){
 		$("#resList").bootstrapTable('refreshOptions', {
 		    url:'/result/result?qrcode='+qrcode
+		    ,onClickRow:function(row,element,field){
+		//웹소켓으로 서버에게 보낼 값.
+				var mem_name = row.MEM_NAME;
+				var doc_name = row.DOC_NAME;
+				var res_time = row.RES_TIME;
+				var dept_name = row.DEPT_NAME;
+				var sch_date = row.SCH_DATE;
+				let msg =mem_name+":"+doc_name+":"+res_time+":"+dept_name+":"+sch_date+":<%=hp_code%>" ;
+				alert(msg);
+				if(msg.trim().length<1){	//빈공간 문자열 출력 
+					socket.send(msg_null+msg);
+				}
+				else{	
+					socket.send(msg_chat+msg);//소켓에 입력된 메시지를 보낸다.
+				}
+				
+			 }
 	 	 })
 		$("#res").modal('show');
 		$("#res").modal('toggle');
 		//location.href="/result/result?qrcode="+qrcode
 	}
 	function back(){
-		location.href="./qrscan.jsp"
+		location.href="./kiosk.jsp"
 
 	}
 	function resok(){
-		//웹소켓으로 서버에게 보낼 값.
-		var mem_name = $("#MEM_NAME").val();
-		var doc_name = $("#DOC_NAME").val();
-		var sch_date = $("#SCH_DATE").val();
-		var res_time = $("#RES_TIME").val();
-		var dept_name = $("#DEPT_NAME").val();
-		let msg = mem_name+":"+doc_name+":"+sch_date+":"res_time+":"+dept_name;
-		if(msg.trim().length<1){	//빈공간 문자열 출력 
-			socket.send(msg_null+msg);
-		}
-		else{	
-			socket.send(msg_chat+msg);//소켓에 입력된 메시지를 보낸다.
-		}
+			location.href="./qrscan.jsp";
 	}
 </script>
 
-<%
-	HttpSession sess = request.getSession();
-	String hp_code = null;
-	if(sess.getAttribute("hp_code")==null){
-		response.sendRedirect("./loginFail.jsp");
-	}else{
-	    hp_code = sess.getAttribute("hp_code").toString();
-	}
-	
-%>
+
 <script>
 	function connectWS(){
 		var hp_code = "<%=hp_code%>"
-		var ws = new WebSocket("ws:\\\\192.168.0.247:7000\\echo?hp_code:"+hp_code);
+		var ws = new WebSocket("ws:\\\\localhost:7000\\echo?hp_code:"+hp_code);
 		socket = ws;	
 		ws.open = function(message){
 			console.log(message);
@@ -130,7 +136,6 @@
 		ws.onerror = function(event){
 			console.log("Server Error");
 		};		
-		socket.send(msg_null+msg);
 	}
 </script>
 </head>
@@ -187,21 +192,21 @@
 				      <table class="table table-hover" id="resList" data-toggle="table">
 						<thead>
 						 	<tr>
-					 			 <th scope="col" data-field="MEM_NAME">환자 이름</th> 	
+					 			 <th scope="col" data-field="MEM_NAME" id="MEM_NAME">환자 이름</th> 	
 								 <th scope="col" data-field="MEM_PHONE">환자 전화번호</th> 
 								 <th scope="col" data-field="MEM_ADDRESS">환자 주소</th>
-								 <th scope="col" data-field="DOC_NAME">의사 이름</th>
-								 <th scope="col" data-field="RES_TIME">예약시간</th>
-								 <th scope="col" data-field="DEPT_NAME">부서 이름</th>
+								 <th scope="col" data-field="DOC_NAME" id="DOC_NAME">의사 이름</th>
+								 <th scope="col" data-field="RES_TIME" id="RES_TIME">예약시간</th>
+								 <th scope="col" data-field="DEPT_NAME" id="DEPT_NAME">부서 이름</th>
 								 <th scope="col" data-field="HP_NAME">병원 이름</th>
-								 <th scope="col" data-field="SCH_DATE">예약날짜</th>
+								 <th scope="col" data-field="SCH_DATE" id="SCH_DATE">예약날짜</th>
 				  			</tr>
 						</thead>
 					 </table>
-					 
+					 <div style="color: #FF0000; text-align: center;"><h1>위 예약내역을 클릭해 주세요</h1></div>
 			      	  </div>
 			     <div class="modal-footer">
-			       <button type="button" class="btn btn-primary" onClick="resok()">확인</button>
+			       <button type="button" class="btn btn-primary" onClick="resok()">다시 스캔</button>
 			       <button type="button" class="btn btn-secondary" onClick="back()">뒤로가기</button>
 			     </div>
 			   </div>
@@ -215,7 +220,7 @@ var socket=null;
 var msg_chat = "100#";	 		//방채팅 
 var msg_exit = "500#";
 $(document).ready(function(){
-	var timeleft = 15;
+	/* var timeleft = 15;
 	var downloadTimer = setInterval(function(){
 	  document.getElementById("countdown").innerHTML = timeleft + " 초 뒤에 선택화면으로 이동됩니다.";
 	  timeleft -= 1;
@@ -223,7 +228,7 @@ $(document).ready(function(){
 	    clearInterval(downloadTimer);
 	    document.getElementById("countdown").innerHTML = "Finished"
 	  }
-	}, 1000);
+	}, 1000); */
 	connectWS();
 	
 })
