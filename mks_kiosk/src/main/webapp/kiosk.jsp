@@ -52,7 +52,11 @@
 	<div class="container-fluid" id="sidebar">
 	    <div class="row">
 	        <div class="col-sm-6"  id="sticky-sidebar" style="text-align: center;">
-	        
+	        <%
+	        	HttpSession sess = request.getSession();
+	        	String str = sess.getAttribute("hp_code").toString();
+	        	out.print(str);
+	        %>
 	        <a onClick="wait()"><img src="resources/img/wait.jpg"/></a>
 	        </div>
 	        <div class="col-sm-6" id="main" style="text-align: center;">

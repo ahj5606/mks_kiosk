@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>QR스캔페이지</title>
-<meta http-equiv="refresh" content="20; url=./kiosk.jsp">
+<meta http-equiv="refresh" content="18; url=./kiosk.jsp">
 <style type="text/css">
 	#d{
 		background-color: #CEF279;
@@ -82,6 +82,55 @@
 	}
 	function resok(){
 		//웹소켓으로 서버에게 보낼 값.
+		var mem_name = $("#MEM_NAME").val();
+		var doc_name = $("#DOC_NAME").val();
+		var sch_date = $("#SCH_DATE").val();
+		var res_time = $("#RES_TIME").val();
+		var dept_name = $("#DEPT_NAME").val();
+		let msg = mem_name+":"+doc_name+":"+sch_date+":"res_time+":"+dept_name;
+		if(msg.trim().length<1){	//빈공간 문자열 출력 
+			socket.send(msg_null+msg);
+		}
+		else{	
+			socket.send(msg_chat+msg);//소켓에 입력된 메시지를 보낸다.
+		}
+	}
+</script>
+
+<%
+	HttpSession sess = request.getSession();
+	String hp_code = null;
+	if(sess.getAttribute("hp_code")==null){
+		response.sendRedirect("./loginFail.jsp");
+	}else{
+	    hp_code = sess.getAttribute("hp_code").toString();
+	}
+	
+%>
+<script>
+	function connectWS(){
+		var hp_code = "<%=hp_code%>"
+		var ws = new WebSocket("ws:\\\\192.168.0.247:7000\\echo?hp_code:"+hp_code);
+		socket = ws;	
+		ws.open = function(message){
+			console.log(message);
+		};
+		// 서버로부터 메시지를 받았을 때
+		ws.onmessage=function(event){
+			
+			var data= event.data;
+			$("#socketAlert").append("<br>"+data);
+			$("#socketAlert").css("display","block");
+		};
+		//브라우저 닫을시
+		ws.onclose = function(event){
+			console.log("Server disconnect");
+		};
+		//브라우저 에러시 
+		ws.onerror = function(event){
+			console.log("Server Error");
+		};		
+		socket.send(msg_null+msg);
 	}
 </script>
 </head>
@@ -162,6 +211,9 @@
 	
 </body>
 <script type="text/javascript">
+var socket=null;
+var msg_chat = "100#";	 		//방채팅 
+var msg_exit = "500#";
 $(document).ready(function(){
 	var timeleft = 15;
 	var downloadTimer = setInterval(function(){
@@ -172,6 +224,7 @@ $(document).ready(function(){
 	    document.getElementById("countdown").innerHTML = "Finished"
 	  }
 	}, 1000);
+	connectWS();
 	
 })
 document.addEventListener("DOMContentLoaded", function() {

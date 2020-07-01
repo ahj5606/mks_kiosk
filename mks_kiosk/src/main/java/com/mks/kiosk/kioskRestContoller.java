@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +25,7 @@ public class kioskRestContoller {
 	
 	@RequestMapping(value="/login",method=RequestMethod.GET)
 	@ResponseBody
-	public String loginBtn(@RequestParam(value="mem_id", defaultValue="false") String mem_id , @RequestParam(value="mem_pw", defaultValue="false") String mem_pw) {
+	public String loginBtn(HttpServletRequest req  ,@RequestParam(value="mem_id", defaultValue="false") String mem_id , @RequestParam(value="mem_pw", defaultValue="false") String mem_pw) {
 		
 		logger.info("로거"+mem_id);
 		Map<String, Object> pMap = new HashMap<String, Object>();
@@ -34,6 +37,8 @@ public class kioskRestContoller {
 		if(lList.size()==0) {
 			return "실패";
 		}else {
+			HttpSession ses = req.getSession();
+			ses.setAttribute("hp_code", lList.get(0).get("HP_CODE").toString());
 			return "성공";
 		}
 	}
