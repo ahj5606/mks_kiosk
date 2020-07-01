@@ -5,7 +5,6 @@
 <head>
 <meta charset="UTF-8">
 <title>QR스캔페이지</title>
-<meta http-equiv="refresh" content="20; url=./kiosk.jsp">
 <style type="text/css">
 	#d{
 		background-color: #CEF279;
@@ -76,13 +75,6 @@
 		$("#res").modal('toggle');
 		//location.href="/result/result?qrcode="+qrcode
 	}
-	function back(){
-		location.href="./qrscan.jsp"
-
-	}
-	function resok(){
-		//웹소켓으로 서버에게 보낼 값.
-	}
 </script>
 </head>
 <body>
@@ -100,7 +92,6 @@
 						<h1>QR 코드 스캔</h1>
 						<div id="output">
 							<div>QR코드를 카메라에 노출시켜 주세요</div>
-							<div id="countdown"></div>
 						</div>
 					</div>
 					<div>&nbsp;</div>
@@ -152,8 +143,8 @@
 					 
 			      	  </div>
 			     <div class="modal-footer">
-			       <button type="button" class="btn btn-primary" onClick="resok()">확인</button>
-			       <button type="button" class="btn btn-secondary" onClick="back()">뒤로가기</button>
+			       <button type="button" class="btn btn-primary" onClick="mem_update()">확인</button>
+			       <button type="button" class="btn btn-secondary" data-dismiss="modal">뒤로가기</button>
 			     </div>
 			   </div>
 			 </div>
@@ -162,18 +153,6 @@
 	
 </body>
 <script type="text/javascript">
-$(document).ready(function(){
-	var timeleft = 15;
-	var downloadTimer = setInterval(function(){
-	  document.getElementById("countdown").innerHTML = timeleft + " 초 뒤에 선택화면으로 이동됩니다.";
-	  timeleft -= 1;
-	  if(timeleft <= 0){
-	    clearInterval(downloadTimer);
-	    document.getElementById("countdown").innerHTML = "Finished"
-	  }
-	}, 1000);
-	
-})
 document.addEventListener("DOMContentLoaded", function() {
 	var video = document.createElement("video");
 	var canvasElement = document.getElementById("canvas");
@@ -233,6 +212,5 @@ document.addEventListener("DOMContentLoaded", function() {
 		requestAnimationFrame(tick);
 	}
 });
-	
 </script>
 </html>

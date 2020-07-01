@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mks.Mapper.managerMapper">
+
+	<select id="login" parameterType="map" resultType="map">
+	 SELECT hp_code, hp_name, dept_name, dept_code FROM mks_online
+		WHERE mks_id=#{mem_id}
+		AND mks_pw=#{mem_pw}
+	</select>
+	<select id="resList" parameterType="map" resultType="map">
+	SELECT M.MEM_NAME MEM_NAME,M.MEM_PHONE MEM_PHONE,M.MEM_ADDRESS MEM_ADDRESS
+		,R.DOC_NAME DOC_NAME ,R.RES_TIME RES_TIME ,R.DEPT_NAME DEPT_NAME
+		,R.HP_NAME HP_NAME , R.SCH_DATE SCH_DATE
+		FROM MKS_MEMBER M , MKS_RESERVE R
+		WHERE M.MEM_MEMCODE = R.MEM_MEMCODE
+		AND r.RES_QRCODE = #{qrcode}
+	</select>
+	
+</mapper>
