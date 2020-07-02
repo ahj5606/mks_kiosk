@@ -27,7 +27,6 @@ public class kioskRestContoller {
 	@ResponseBody
 	public String loginBtn(HttpServletRequest req  ,@RequestParam(value="mem_id", defaultValue="false") String mem_id , @RequestParam(value="mem_pw", defaultValue="false") String mem_pw) {
 		
-		logger.info("로거"+mem_id);
 		Map<String, Object> pMap = new HashMap<String, Object>();
 		pMap.put("mem_id", mem_id);
 		pMap.put("mem_pw", mem_pw);

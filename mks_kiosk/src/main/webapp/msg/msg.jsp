@@ -1,5 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%
+	HttpSession sess = request.getSession();
+	sess.setAttribute("hp_code", "280HP");
+	String hp_code = sess.getAttribute("hp_code").toString();
+	out.print(hp_code);
+    
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,7 +26,7 @@
 <script src="/resources/js/jsQR.js"></script>
 <script>
 	function connectWS(){
-		var ws = new WebSocket("ws:\\\\192.168.0.2:7000\\echo?hp_code:280HP");
+		var ws = new WebSocket("ws:\\\\192.168.0.8:7000\\echo?hp_code:<%=hp_code%>"); //여기에 세션에서 얻은 병원코드를 보냄 
 		socket = ws;	
 		ws.open = function(message){
 			console.log(message);
@@ -32,11 +39,9 @@
 			if(data){
 				var str = ""+data;
 				var strs = str.split('?')
-				alert(strs[1]);
 				var imsi = strs[1].split(']');
 				var imsi2 = imsi[0].split(':');
 				var hp_code = imsi2[1];
-				alert("hp_code"+hp_code)
 				//이서연:윤정민:1230:영상의학과:2020/07/23:280HP
 				var imsi3 = imsi[1].split(':');
 				var mem_name = imsi3[0];

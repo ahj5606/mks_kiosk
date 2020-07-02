@@ -1,10 +1,16 @@
 package com.mks.kiosk;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.StringTokenizer;
+
+import javax.lang.model.element.Element;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +24,7 @@ public class EchoHandler extends TextWebSocketHandler {
 	Logger logger = LoggerFactory.getLogger(EchoHandler.class);
 	List<WebSocketSession> sessionList = new ArrayList<>();
 	Map<String,List<WebSocketSession>> sessionMap = new HashMap<>();
+	String hp_code = null;
 	//클라이언트와 연결 이후에 실행되는 메소드
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) 
@@ -27,12 +34,12 @@ public class EchoHandler extends TextWebSocketHandler {
 		//ws:\\\\192.168.0.244:5000\\ver2\\echo?roomCreate:kosmo59
 		String real = uri.split("\\?")[1];//roomCreate:kosmo59
 		String status = real.split("\\:")[0];//roomCreate
-		String roomName = real.split("\\:")[1];//kosmo59
+		hp_code = real.split("\\:")[1];//kosmo59
 		if("hp_code".equals(status)) {
 			sessionList.add(session);
-			sessionMap.put("roomName",sessionList);
+			sessionMap.put(hp_code,sessionList);
 		}
-		logger.info("sessionList : "+sessionList.size());
+		logger.info("sessionList : "+sessionList.size()+" 병원코드 : "+hp_code );
 	}
 	//클라이언트가 서버로 메시지를 전송했을 때 실행되는 메소드
 	@Override
@@ -51,14 +58,33 @@ public class EchoHandler extends TextWebSocketHandler {
 			for(WebSocketSession sess:sessionList) {
 				sess.sendMessage(new TextMessage(info));
 			}
+			
+
 		}
 		//메시지가 null이 아닌 경우
 		else {
 			if(msg_chat.equals(kind)) {
 				String msg = st.nextToken();
-				for(WebSocketSession sess:sessionList) {
-					sess.sendMessage(new TextMessage(session+msg));
+				/*
+				 * for(WebSocketSession sess:sessionList) { 
+				 * sess.sendMessage(new
+				 * TextMessage(session+msg)); }
+				 */
+				String code[] = msg.split(":");
+				int i=0;
+				Iterator<Entry<String, List<WebSocketSession>>> entries = sessionMap.entrySet().iterator();
+				while(entries.hasNext()){
+					
+					Entry<String, List<WebSocketSession>>entry = (Entry<String, List<WebSocketSession>>)entries.next();
+					logger.info("sessionKey? : "+entry.getKey());
+					if(entry.getKey().equals(code[5])) {		//키값 = 세션 = 병원 // 해당 병우너에
+						WebSocketSession sess = entry.getValue().get(i);
+						logger.info(sess+"");
+						sess.sendMessage(new TextMessage(session+msg));
+					}
+					i++;
 				}
+				
 			}
 			//나가기 일때
 			if(msg_exit.equals(kind)) {
