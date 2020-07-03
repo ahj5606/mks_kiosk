@@ -2,7 +2,9 @@
     pageEncoding="UTF-8"%>
 <%
 	HttpSession sess = request.getSession();
-	sess.setAttribute("hp_code", "280HP");
+	if(sess.getAttribute("hp_code")==null){
+		response.sendRedirect("../loginFail.jsp");
+	}
 	String hp_code = sess.getAttribute("hp_code").toString();
 	out.print(hp_code);
     
@@ -11,22 +13,11 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.0/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
-<link rel="stylesheet" href="/resources/css/bootstrap.min.css">
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.js"></script>
-<link rel="stylesheet" href="/resources/css/keyboard.css">
-<script src="/resources/js/jquery.keyboard.js"></script>
-<script src="/resources/js/jquery.keyboard.extension-autocomplete.js"></script>
-<script src="/resources/js/jquery.keyboard.extension-typing.js"></script>
-<script src="/resources/js/jquery.mousewheel.js"></script>
-<script src="/resources/js/bootstrap-table.min.js"></script>
-<script src="/resources/js/bootstrap.min.js"></script>
-<script src="/resources/js/jsQR.js"></script>
+<title>관리자 이력</title>
+<%@include file="/Common.jsp" %>
 <script>
 	function connectWS(){
-		var ws = new WebSocket("ws:\\\\192.168.0.8:7000\\echo?hp_code:<%=hp_code%>"); //여기에 세션에서 얻은 병원코드를 보냄 
+		var ws = new WebSocket("ws:\\\\192.168.0.247:7000\\echo?hp_code:<%=hp_code%>"); //여기에 세션에서 얻은 병원코드를 보냄 
 		socket = ws;	
 		ws.open = function(message){
 			console.log(message);
@@ -35,30 +26,36 @@
 		ws.onmessage=function(event){
 			
 			var data= event.data;
-			
-			if(data){
-				var str = ""+data;
-				var strs = str.split('?')
-				var imsi = strs[1].split(']');
-				var imsi2 = imsi[0].split(':');
-				var hp_code = imsi2[1];
-				//이서연:윤정민:1230:영상의학과:2020/07/23:280HP
-				var imsi3 = imsi[1].split(':');
-				var mem_name = imsi3[0];
-				var doc_name = imsi3[1];
-				var res_time = imsi3[2];
-				var dept_name = imsi3[3];
-				var sch_date = imsi3[4];
-				alert("환자 이름 : "+mem_name +" 의사 이름:  "+doc_name+" 예약 시간 :"+res_time+" 부서 이름 : "+dept_name+" 날짜 :"+sch_date);
-				}
-			var tableText ="<tr>";
-			tableText +="<td>"+mem_name+"</td>"
-			tableText +="<td>"+doc_name+"</td>"
-			tableText +="<td>"+res_time+"</td>"
-			tableText +="<td>"+dept_name+"</td>"
-			tableText +="<td>"+sch_date+"</td>"
-			tableText +="</tr>"
-			$("#patient").append(tableText);
+			alert(data);
+			var str = ""+data;
+			var imsi = str.split(":");
+			var separ = imsi[0];
+			var mem_name = imsi[1];
+			var doc_name = imsi[2];
+			var res_time = imsi[3];
+			var dept_name = imsi[4];
+			var sch_date = imsi[5];
+
+			alert("separ ="+separ +" mem_name = "+mem_name+"  doc_name= "+doc_name+" res_time= "+res_time+" dept_name= "+dept_name+ " sch_date= "+sch_date)
+						
+			 var tableText ="<tr>";
+			if(separ=='100'){
+				tableText +="<td>"+mem_name+"</td>"
+				tableText +="<td>"+doc_name+"</td>"
+				tableText +="<td>"+res_time+"</td>"
+				tableText +="<td>"+dept_name+"</td>"
+				tableText +="<td>"+sch_date+"</td>"
+				tableText +="</tr>"
+				$("#patient").append(tableText);
+			}else if(separ=='102'){
+				msg_count = msg_count+1;
+				document.getElementById('msg_count').innerText=msg_count;
+				tableText +='<td onClick="test('+"'"+mem_name+"'"+","+"'"+res_time+"'"+')" >'+mem_name;
+				tableText +="<td>"+doc_name+"</td>"
+				tableText +="<td>"+res_time+"</td>"
+				tableText +="</tr>"
+				$("#chatList").append(tableText);
+			} 
 		};
 		//브라우저 닫을시
 		ws.onclose = function(event){
@@ -69,11 +66,26 @@
 			console.log("Server Error");
 		};		
 	}
+	function test(mem_name,res_time){
+		alert(mem_name);
+	}
+	
+	function chatModal(){
+		$("#chat_modal").modal('show');
+		msg_count=0;
+		document.getElementById('msg_count').innerText=msg_count;
+	}
 </script>
 </head>
 <body>
 <div style="text-align: center;">
-	<div id="socketAlert">환자 예약 내역 확인 테이블</div>
+<div>
+	<h1>환자 예약 내역 확인 테이블</h1>
+	<div class="float-right"> 
+	<span class="badge badge-danger" ><div id="msg_count">0</div></span>
+		<button type="button" class="btn btn-secondary" data-toggle="modal" onClick="chatModal()">문의 채팅내역</button> 
+	</div>
+</div>
 	 <table class="table table-hover" id="resList" data-toggle="table">
 						<thead>
 						 	<tr>
@@ -95,13 +107,54 @@
 						</tbody>
 					 </table>
 </div>
-	
+
+
+<!--  -->
+		<div class="modal" id="chat_modal" aria-hidden="true" style="display: none; z-index: 1060;">
+				  <div class="modal-dialog modal-lg">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <h5 class="modal-title" id="Search">문의 채팅</h5>
+				      </div>
+				      <div class="modal-body">
+				      <div>
+					<br>
+				      	 <table class="table table-hover" id="c_List" data-toggle="table">
+						<thead>
+						 	<tr>
+					 			 <th scope="col" data-field="name">문의자</th> 	
+								 <th scope="col" data-field="time">시간</th>
+								 <th scope="col" data-field="c">채팅내용</th>
+				  			</tr>
+						</thead>
+						<tbody id="chatList">
+							<tr>
+								 <th></th> 	
+								 <th></th> 	
+								 <th></th> 		
+							<tr>
+						</tbody>
+					 </table>
+				      </div>
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>	
+		    	
 <script type="text/javascript">
 	var socket=null;
 	var msg_chat = "100#";	 		//방채팅 
+	var msg_private = "102#";
 	var msg_exit = "500#";
+	var msg_count = 0;
 	/* 채팅 기능 선언부  */
 	$(document).ready(function(){
+		$("#resList").bootstrapTable('hideLoading');
+		$("#c_List").bootstrapTable('hideLoading');
+	
 		connectWS();
 		$("#btnSend").on('click',function(evt){
 			evt.preventDefault();

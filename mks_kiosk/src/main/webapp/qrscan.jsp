@@ -65,18 +65,7 @@
 		hight: 100%;
 	}
 </style>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.0/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
-<link rel="stylesheet" href="resources/css/bootstrap.min.css">
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.js"></script>
-<link rel="stylesheet" href="resources/css/keyboard.css">
-<script src="resources/js/jquery.keyboard.js"></script>
-<script src="resources/js/jquery.keyboard.extension-autocomplete.js"></script>
-<script src="resources/js/jquery.keyboard.extension-typing.js"></script>
-<script src="resources/js/jquery.mousewheel.js"></script>
-<script src="resources/js/bootstrap-table.min.js"></script>
-<script src="resources/js/bootstrap.min.js"></script>
-<script src="resources/js/jsQR.js"></script>
+<%@include file="/Common.jsp" %>
 <script type="text/javascript">
 	function qrScan(qrcode){
 		$("#resList").bootstrapTable('refreshOptions', {

@@ -5,17 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>병원 키오스크</title>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.0/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
-<link rel="stylesheet" href="resources/css/bootstrap.min.css">
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.js"></script>
-<link rel="stylesheet" href="resources/css/keyboard.css">
-<script src="resources/js/jquery.keyboard.js"></script>
-<script src="resources/js/jquery.keyboard.extension-autocomplete.js"></script>
-<script src="resources/js/jquery.keyboard.extension-typing.js"></script>
-<script src="resources/js/jquery.mousewheel.js"></script>
-<script src="resources/js/bootstrap-table.min.js"></script>
-<script src="resources/js/bootstrap.min.js"></script>
+<%@include file="/Common.jsp" %>
 <style type="text/css">
  body{
  	background-color: #00D8FF
