@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%
+   pageEncoding="UTF-8"%>
+ <%
 	HttpSession sess = request.getSession();
 	String hp_code = null;
 	if(sess.getAttribute("hp_code")==null){
@@ -13,59 +13,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>QR스캔페이지</title>
-<!-- <meta http-equiv="refresh" content="18; url=./kiosk.jsp"> -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="">
+<meta name="author" content="">
+<title>Cover Template for Bootstrap</title>
+<%@include file="/Common.jsp" %>
 <style type="text/css">
-	#d{
-		background-color: #CEF279;
-	
-	}
-	main {
-		width: 100%;
-		height: 100%;
-		text-align: center;
-	}
-	
-	
-	main>div:first-child {
-		width: 100%;
-	}
-	
-	main>div:last-child {
-		background-color: #00D8FF;
-		width: 100%;
-	}
-	
-	div#output {
-		background-color: #00D8FF;
-		padding-left: 10px;
-		padding-right: 10px;
-		padding-top: 10px;
-		padding-bottom: 10px;
-	}
-	
-	div#frame {
-		border: 2px solid #005666;
-		background-color: #FFFFFF;
-		margin-left: 10px;
-		margin-right: 10px;
-		padding-left: 8px;
-		padding-right: 8px;
-		padding-top: 8px;
-		padding-bottom: 8px;
-	}
-	
-	div#outputLayer {
-		text-align: left;
-	}
-	
-	canvas {
-		width: 100%;
-		hight: 100%;
+	body{
+		font-family: 'Do Hyeon', sans-serif;
 	}
 </style>
-<%@include file="/Common.jsp" %>
+<script type="text/javascript">
+	function home(){
+		location.href="/kiosk/k_main.jsp";
+	}
+	function qr_scanner(){
+		location.href="/kiosk/k_scanner.jsp";
+	}
+	function waiting_ticket(){
+		location.href="/kiosk/k_waiting.jsp";
+		
+	}
+</script>
 <script type="text/javascript">
 	function qrScan(qrcode){
 		$("#resList").bootstrapTable('refreshOptions', {
@@ -100,8 +70,6 @@
 			location.href="./qrscan.jsp";
 	}
 </script>
-
-
 <script>
 	function connectWS(){
 		var hp_code = "<%=hp_code%>"
@@ -128,83 +96,82 @@
 	}
 </script>
 </head>
-<body>
-
-<div id="d" class="container-fluid" id="sidebar" style="height:910px;">
-	    <div class="row">
-	        <div class="col-sm-3"   style="text-align: center;">
-	        <!--  
-	       		 <img src="resources/img/scanning.gif" style="width:60% ; height: 40%; margin-top: 150px;"/>
-	        -->
-	        </div>
-	        <div class="col-sm-6"  style="text-align: center;">
-	        	<main>
-					<div id="test">
-						<h1>QR 코드 스캔</h1>
-						<div id="output">
-							<div>QR코드를 카메라에 노출시켜 주세요</div>
-							<div id="countdown"></div>
-						</div>
-					</div>
-					<div>&nbsp;</div>
-					<div>
-						<h1>카메라</h1>
-						<div id="frame">
-							<div id="loadingMessage">
-								🎥 비디오 스트림에 액세스 할 수 없습니다<br />웹캠이 활성화되어 있는지 확인하십시오<br><br><br><h2>관리자에게 문의하세요.</h2>
-							</div>
-							<canvas id="canvas"></canvas>
-						</div>
-					</div>
-				</main>
-	        </div>
-			<div class="col-sm-3"   style="text-align: center;">
-	        	<!--  
-	        	<img src="resources/img/scanning2.gif" style="width:60% ; height: 40%; margin-top: 150px;"/>
-	        	-->
-	      	</div>
-	    </div>
+<body class="text-center" style="overflow-x:hidden;">
+	<!-- 상단 -->
+	<div class="jumbotron pt-5 pb-5 text-white rounded " style="background-color: #007bff;">
+		<div class="col-md-6 px-0 mx-auto">
+			<h1 class="display-4">위대항 병원</h1>
+			<p class="lead my-2">welcome to widaehang hospital. we service the best.</p>
+        </div>
 	</div>
-	
-	<!-- modal   -->
-		<div class="modal fade" id="res" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-				  <div class="modal-dialog modal-xl" role="document">
-				    <div class="modal-content">
-				      <div class="modal-header">
-				        <h5 class="modal-title" id="exampleModalLabel">확인</h5>
-				        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-				          <span aria-hidden="true">&times;</span>
-				        </button>
-				      </div>
-				      <div class="modal-body">
-				      
-				      <table class="table table-hover" id="resList" data-toggle="table">
-						<thead>
-						 	<tr>
-					 			 <th scope="col" data-field="MEM_NAME" id="MEM_NAME">환자 이름</th> 	
-								 <th scope="col" data-field="MEM_PHONE">환자 전화번호</th> 
-								 <th scope="col" data-field="MEM_ADDRESS">환자 주소</th>
-								 <th scope="col" data-field="DOC_NAME" id="DOC_NAME">의사 이름</th>
-								 <th scope="col" data-field="RES_TIME" id="RES_TIME">예약시간</th>
-								 <th scope="col" data-field="DEPT_NAME" id="DEPT_NAME">부서 이름</th>
-								 <th scope="col" data-field="HP_NAME">병원 이름</th>
-								 <th scope="col" data-field="SCH_DATE" id="SCH_DATE">예약날짜</th>
-				  			</tr>
-						</thead>
-					 </table>
-					 <div style="color: #FF0000; text-align: center;"><h1>위 예약내역을 클릭해 주세요</h1></div>
-			      	  </div>
-			     <div class="modal-footer">
-			       <button type="button" class="btn btn-primary" onClick="resok()">다시 스캔</button>
-			       <button type="button" class="btn btn-secondary" onClick="back()">뒤로가기</button>
-			     </div>
-			   </div>
-			 </div>
-		</div>	
-	<!-- modal   -->
-	
-</body>
-<script type="text/javascript">
+	<!-- 본문 -->
+	<div class="container mt-1 mb-3 pt-1 pb-3">
+		<div class="row">
+			<div class="col-md" style="min-height:552px;">
+				<!-- 상단 -->
+				<div class="row">
+					<div class="col-md">
+						<h5>진료 예약 qr 코드 스캔</h5>
+					</div>
+				</div>
+				<div class="row mb-4">
+					<div class="col-md" id="output">
+						&nbsp;&nbsp;&nbsp;qr코드를 카메라에 노출시켜 주세요.&nbsp;&nbsp;&nbsp;
+						<span id="countdown"></span>
+					</div>
+				</div>
+				<!-- 카메라 -->
+				<div class="border mt-3 mx-auto w-75" style="background-color:#000000;height:467px;">
+					<div class="border m-3" style="background-color:#FFFFFF;height:428px;">
+						<!-- 로딩 메세지 -->
+						<div class="row pt-5" id="loadingMessage">
+							<div class="col-md" style="text-align:center;">
+								<h4>[ 카메라  ]</h4>
+								<span style="color:red;">
+									※ 비디오 스트림에 엑세스 할 수 없습니다.<br>웹캠이 활성화되어 있는지 확인하십시오.<br><br><h2>관리자에게 문의하세요.</h2></span>
+							</div>
+						</div>
+						<!-- canvas -->
+						<div class="row">
+							<div class="col-md">
+								<canvas id="canvas" style="background-color:#000000;"></canvas>
+							</div>
+						</div>
+					</div>
+				</div><!-- 카메라 끝 -->
+			</div>
+		</div>
+	</div>
+	<!-- 하단 -->
+	<div class="fooger" style="height:140px;background-color: #007bff;">
+		<div class="row pt-4">
+			<div class="col"></div>
+			<div class="col-4">
+				<a href="#" style="color:#FFFFFF;font-size:xx-large">Ko:MEDI</a>
+			</div>
+			<div class="col-2"></div>
+			<div class="col-1">
+				<div class="row" onClick="home()">
+					<img class="card-img-right" style="height: 50px;" src="./home.svg">
+					<a>메인화면</a>
+				</div>
+			</div>
+			<div class="col-1">
+				<div class="row" id="wait_menu" onClick="waiting_ticket()">
+					<img class="card-img-right"style="height: 50px;" src="./print.svg">
+					<a>대기표</a>
+				</div>
+			</div>
+			<div class="col-1">
+				<div class="row" id="qr_menu" onClick="qr_scanner()">
+					<img class="card-img-right" style="height: 50px;" src="./qr.svg">
+					<a>qr코드스캔</a>
+				</div>
+			</div>
+			<div class="col"></div>
+		</div>
+	</div>
+	<script type="text/javascript">
 var socket=null;
 var msg_chat = "100#";	 		//방채팅 
 var msg_exit = "500#";
@@ -282,4 +249,5 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 	
 </script>
+</body>
 </html>

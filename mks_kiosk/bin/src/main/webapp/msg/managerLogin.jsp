@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>키오스크 로그인</title>
+<title>키오스크 관리자 로그인</title>
 <%@include file="/Common.jsp" %>
 <style type="text/css">
 	body {
@@ -31,7 +31,7 @@
 					,data:"mem_id="+id+"&mem_pw="+pw
 					,success:function(data){
 						if(data.trim()=="성공"){
-								location.href="./kiosk.jsp"
+								location.href="http://192.168.0.247:7000/msg/msg.jsp"
 						}else{
 								alert("아이디와 비밀번호를 확인해 주세요");
 						}
@@ -47,7 +47,7 @@
 
 <div class="container" style="text-align: center;">
 	<div class="col-md-12" style="align-content: center;">
-        <h1 class="form-signin-heading">키오스크</h1>
+        <h1 class="form-signin-heading">키오스크 관리자</h1>
        </div>
 	<div class="col-md-12" style="align-content: center;">
         <h2 class="form-signin-heading"style="margin-bottom:40px;margin-top:120px;">로그인</h2>
@@ -78,59 +78,5 @@
 	</div>
 	<!-- 로그인 모달 끝 -->
 	</div>
-<script type="text/javascript">
-	$(document).ready(function(){
-		var availableTags = [
-			];
-
-			$('#k_id')
-			  .keyboard()
-			  .autocomplete({
-			    source: availableTags
-			  })
-			  .addAutocomplete({
-			    // add autocomplete window positioning
-			    // options here (using position utility)
-			    position: {
-			      of: null,
-			      my: 'right top',
-			      at: 'left top',
-			      collision: 'flip'
-			    }
-			  })
-
-			// activate the typing extension
-			.addTyping({
-			  showTyping: true,
-			  delay: 250
-			});
-			$('#k_pw')
-			  .keyboard()
-			  .autocomplete({
-			    source: availableTags
-			  })
-			  .addAutocomplete({
-			    // add autocomplete window positioning
-			    // options here (using position utility)
-			    position: {
-			      of: null,
-			      my: 'right top',
-			      at: 'left top',
-			      collision: 'flip'
-			    }
-			  })
-
-			// activate the typing extension
-			.addTyping({
-			  showTyping: true,
-			  delay: 250
-			});
-
-	   
-		
-		
-	})
-
-</script>
 </body>
 </html>
