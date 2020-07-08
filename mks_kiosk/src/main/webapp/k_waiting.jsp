@@ -1,5 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
    pageEncoding="UTF-8"%>
+  <%
+	HttpSession sess = request.getSession();
+	String hp_code = null;
+	String hp_name = null;
+	if(sess.getAttribute("hp_code")==null){
+		response.sendRedirect("https://192.168.0.247:7000/loginFail.jsp");
+	}else{
+	    hp_code = sess.getAttribute("hp_code").toString();
+	    hp_name = sess.getAttribute("hp_name").toString();
+	}
+	
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,13 +28,13 @@
 </style>
 <script type="text/javascript">
 	function home(){
-		location.href="/kiosk/k_main.jsp";
+		location.href="https://192.168.0.247:7000/k_main.jsp";
 	}
 	function qr_scanner(){
-		location.href="/kiosk/k_scanner.jsp";
+		location.href="https://192.168.0.247:7000/k_scanner.jsp";
 	}
 	function waiting_ticket(){
-		location.href="/kiosk/k_waiting.jsp";
+		location.href="https://192.168.0.247:7000/k_waiting.jsp";
 	}
 	function ticketing(){
 		alert("대기표발급! ==> 화면리프레시");
@@ -33,7 +45,7 @@
 	<!-- 상단 -->
 	<div class="jumbotron pt-5 pb-5 text-white rounded " style="background-color: #007bff;">
 		<div class="col-md-6 px-0 mx-auto">
-			<h1 class="display-4">위대항 병원</h1>
+			<h1 class="display-4"><%=hp_name %></h1>
 			<p class="lead my-2">welcome to widaehang hospital. we service the best.</p>
         </div>
 	</div>
@@ -76,19 +88,19 @@
 			<div class="col-2"></div>
 			<div class="col-1">
 				<div class="row" onClick="home()">
-					<img class="card-img-right" style="height: 50px;" src="./home.svg">
+					<img class="card-img-right" style="height: 50px;" src="/resources/img/home.svg">
 					<a>메인화면</a>
 				</div>
 			</div>
 			<div class="col-1">
 				<div class="row" id="wait_menu" onClick="waiting_ticket()">
-					<img class="card-img-right"style="height: 50px;" src="./print.svg">
+					<img class="card-img-right"style="height: 50px;" src="/resources/img/print.svg">
 					<a>대기표</a>
 				</div>
 			</div>
 			<div class="col-1">
 				<div class="row" id="qr_menu" onClick="qr_scanner()">
-					<img class="card-img-right" style="height: 50px;" src="./qr.svg">
+					<img class="card-img-right" style="height: 50px;" src="/resources/img/qr.svg">
 					<a>qr코드스캔</a>
 				</div>
 			</div>

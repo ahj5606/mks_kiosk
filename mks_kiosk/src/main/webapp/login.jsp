@@ -31,7 +31,7 @@
 					,data:"mem_id="+id+"&mem_pw="+pw
 					,success:function(data){
 						if(data.trim()=="성공"){
-								location.href="./kiosk.jsp"
+								location.href="https://192.168.0.247:7000/k_main.jsp"
 						}else{
 								alert("아이디와 비밀번호를 확인해 주세요");
 						}

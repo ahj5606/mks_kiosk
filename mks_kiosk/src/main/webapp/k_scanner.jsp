@@ -3,10 +3,12 @@
  <%
 	HttpSession sess = request.getSession();
 	String hp_code = null;
+	String hp_name = null;
 	if(sess.getAttribute("hp_code")==null){
-		response.sendRedirect("./loginFail.jsp");
+		response.sendRedirect("https://192.168.0.247:7000/loginFail.jsp");
 	}else{
 	    hp_code = sess.getAttribute("hp_code").toString();
+	    hp_name = sess.getAttribute("hp_name").toString();
 	}
 	
 %>
@@ -26,34 +28,38 @@
 </style>
 <script type="text/javascript">
 	function home(){
-		location.href="/kiosk/k_main.jsp";
+		location.href="https://192.168.0.247:7000/k_main.jsp";
 	}
 	function qr_scanner(){
-		location.href="/kiosk/k_scanner.jsp";
+		location.href="https://192.168.0.247:7000/k_scanner.jsp";
 	}
 	function waiting_ticket(){
-		location.href="/kiosk/k_waiting.jsp";
+		location.href="https://192.168.0.247:7000/k_waiting.jsp";
 		
 	}
 </script>
 <script type="text/javascript">
+var qr =0;
 	function qrScan(qrcode){
+		qr = qrcode;
 		$("#resList").bootstrapTable('refreshOptions', {
-		    url:'/result/result?qrcode='+qrcode
-		    ,onClickRow:function(row,element,field){
+		    url:'/result/result?qrcode='+qrcode+'&hp_code=<%=hp_code%>'	
+		    	    ,onClickRow:function(row,element,field){
 		//웹소켓으로 서버에게 보낼 값.
 				var mem_name = row.MEM_NAME;
 				var doc_name = row.DOC_NAME;
 				var res_time = row.RES_TIME;
 				var dept_name = row.DEPT_NAME;
 				var sch_date = row.SCH_DATE;
-				let msg =mem_name+":"+doc_name+":"+res_time+":"+dept_name+":"+sch_date+":<%=hp_code%>" ;
+				let msg =mem_name+":"+doc_name+":"+res_time+":"+dept_name+":"+sch_date+":<%=hp_code%>"+":"+qrcode ;
 				alert(msg);
 				if(msg.trim().length<1){	//빈공간 문자열 출력 
 					socket.send(msg_null+msg);
+					
 				}
 				else{	
 					socket.send(msg_chat+msg);//소켓에 입력된 메시지를 보낸다.
+					updQr()
 				}
 				
 			 }
@@ -69,11 +75,22 @@
 	function resok(){
 			location.href="./qrscan.jsp";
 	}
+	function updQr(){
+		$.ajax({
+			url:'/Rkiosk/update?qrcode='+qr
+			,success:function(data){
+				if(data.trim()=="성공"){
+					alert("성공"	)
+				}
+			}
+		
+		})
+	}
 </script>
 <script>
 	function connectWS(){
 		var hp_code = "<%=hp_code%>"
-		var ws = new WebSocket("ws:\\\\localhost:7000\\echo?hp_code:"+hp_code);
+		var ws = new WebSocket("wss:\\\\192.168.0.247:7000\\echo?hp_code:"+hp_code);
 		socket = ws;	
 		ws.open = function(message){
 			console.log(message);
@@ -100,7 +117,7 @@
 	<!-- 상단 -->
 	<div class="jumbotron pt-5 pb-5 text-white rounded " style="background-color: #007bff;">
 		<div class="col-md-6 px-0 mx-auto">
-			<h1 class="display-4">위대항 병원</h1>
+			<h1 class="display-4"><%=hp_name %></h1>
 			<p class="lead my-2">welcome to widaehang hospital. we service the best.</p>
         </div>
 	</div>
@@ -152,41 +169,68 @@
 			<div class="col-2"></div>
 			<div class="col-1">
 				<div class="row" onClick="home()">
-					<img class="card-img-right" style="height: 50px;" src="./home.svg">
+					<img class="card-img-right" style="height: 50px;" src="/resources/img/home.svg">
 					<a>메인화면</a>
 				</div>
 			</div>
 			<div class="col-1">
 				<div class="row" id="wait_menu" onClick="waiting_ticket()">
-					<img class="card-img-right"style="height: 50px;" src="./print.svg">
+					<img class="card-img-right"style="height: 50px;" src="/resources/img/print.svg">
 					<a>대기표</a>
 				</div>
 			</div>
 			<div class="col-1">
 				<div class="row" id="qr_menu" onClick="qr_scanner()">
-					<img class="card-img-right" style="height: 50px;" src="./qr.svg">
+					<img class="card-img-right" style="height: 50px;" src="/resources/img/qr.svg">
 					<a>qr코드스캔</a>
 				</div>
 			</div>
 			<div class="col"></div>
 		</div>
 	</div>
+	
+	<!-- modal   -->
+		<div class="modal fade" id="res" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				  <div class="modal-dialog modal-xl" role="document">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <h5 class="modal-title" id="exampleModalLabel">확인</h5>
+				        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				          <span aria-hidden="true">&times;</span>
+				        </button>
+				      </div>
+				      <div class="modal-body">
+				      
+				      <table class="table table-hover" id="resList" data-toggle="table">
+						<thead>
+						 	<tr>
+					 			 <th scope="col" data-field="MEM_NAME" id="MEM_NAME">환자 이름</th> 	
+								 <th scope="col" data-field="MEM_PHONE">환자 전화번호</th> 
+								 <th scope="col" data-field="MEM_ADDRESS">환자 주소</th>
+								 <th scope="col" data-field="DOC_NAME" id="DOC_NAME">의사 이름</th>
+								 <th scope="col" data-field="RES_TIME" id="RES_TIME">예약시간</th>
+								 <th scope="col" data-field="DEPT_NAME" id="DEPT_NAME">부서 이름</th>
+								 <th scope="col" data-field="HP_NAME">병원 이름</th>
+								 <th scope="col" data-field="SCH_DATE" id="SCH_DATE">예약날짜</th>
+				  			</tr>
+						</thead>
+					 </table>
+					 <div style="color: #FF0000; text-align: center;"><h1>위 예약내역을 클릭해 주세요</h1></div>
+			      	  </div>
+			     <div class="modal-footer">
+			       <button type="button" class="btn btn-primary" onClick="resok()">다시 스캔</button>
+			       <button type="button" class="btn btn-secondary" onClick="back()">뒤로가기</button>
+			     </div>
+			   </div>
+			 </div>
+		</div>	
+	<!-- modal   -->
 	<script type="text/javascript">
 var socket=null;
 var msg_chat = "100#";	 		//방채팅 
 var msg_exit = "500#";
 $(document).ready(function(){
-	/* var timeleft = 15;
-	var downloadTimer = setInterval(function(){
-	  document.getElementById("countdown").innerHTML = timeleft + " 초 뒤에 선택화면으로 이동됩니다.";
-	  timeleft -= 1;
-	  if(timeleft <= 0){
-	    clearInterval(downloadTimer);
-	    document.getElementById("countdown").innerHTML = "Finished"
-	  }
-	}, 1000); */
 	connectWS();
-	
 })
 document.addEventListener("DOMContentLoaded", function() {
 	var video = document.createElement("video");

@@ -7,13 +7,27 @@
 		WHERE mks_id=#{mem_id}
 		AND mks_pw=#{mem_pw}
 	</select>
+	
 	<select id="resList" parameterType="map" resultType="map">
-	SELECT M.MEM_NAME MEM_NAME,M.MEM_PHONE MEM_PHONE,M.MEM_ADDRESS MEM_ADDRESS
-		,R.DOC_NAME DOC_NAME ,R.RES_TIME RES_TIME ,R.DEPT_NAME DEPT_NAME
-		,R.HP_NAME HP_NAME , R.SCH_DATE SCH_DATE ,R.SCH_CODE SCH_CODE
-		FROM MKS_MEMBER M , MKS_RESERVE R
-		WHERE M.MEM_MEMCODE = R.MEM_MEMCODE
-		AND r.RES_QRCODE = #{qrcode}
+    SELECT M.MEM_NAME MEM_NAME,M.MEM_PHONE MEM_PHONE,M.MEM_ADDRESS MEM_ADDRESS
+        ,R.DOC_NAME DOC_NAME ,R.RES_TIME RES_TIME ,R.DEPT_NAME DEPT_NAME
+        ,R.HP_NAME HP_NAME , R.SCH_DATE SCH_DATE ,R.SCH_CODE SCH_CODE
+        FROM MKS_MEMBER M , MKS_RESERVE R
+        WHERE M.MEM_MEMCODE = R.MEM_MEMCODE
+        AND r.RES_QRCODE = #{qrcode} AND r.sch_date =(select TO_CHAR(SYSDATE,'YYYY/MM/DD') FROM dual) AND HP_CODE =#{hp_code} AND R.ISOK ='확인중'
 	</select>
 	
+	<select id="fresList" parameterType="map" resultType="map">
+    SELECT M.MEM_NAME MEM_NAME,M.MEM_PHONE MEM_PHONE,M.MEM_ADDRESS MEM_ADDRESS
+        ,R.DOC_NAME DOC_NAME ,R.RES_TIME RES_TIME ,R.DEPT_NAME DEPT_NAME
+        ,R.HP_NAME HP_NAME , R.SCH_DATE SCH_DATE ,R.SCH_CODE SCH_CODE,R.ISOK
+        FROM MKS_MEMBER M , MKS_RESERVE R
+        WHERE M.MEM_MEMCODE = R.MEM_MEMCODE
+        AND r.sch_date =(select TO_CHAR(SYSDATE,'YYYY/MM/DD') FROM dual) AND HP_CODE =#{hp_code}
+	</select>
+	
+	
+	<update id="qrupdate" parameterType="map">
+		UPDATE MKS_RESERVE SET ISOK ='확인됨' WHERE  res_qrcode =#{qrcode}
+	</update>
 </mapper>

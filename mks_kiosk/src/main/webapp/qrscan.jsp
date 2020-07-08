@@ -80,10 +80,10 @@
 				let msg =mem_name+":"+doc_name+":"+res_time+":"+dept_name+":"+sch_date+":<%=hp_code%>" ;
 				alert(msg);
 				if(msg.trim().length<1){	//빈공간 문자열 출력 
-					socket.send(msg_null+msg);
+					socket.send(msg_null+qrcode);
 				}
 				else{	
-					socket.send(msg_chat+msg);//소켓에 입력된 메시지를 보낸다.
+					socket.send(msg_chat+qrcode);//소켓에 입력된 메시지를 보낸다.
 				}
 				
 			 }
@@ -150,10 +150,11 @@
 					<div>
 						<h1>카메라</h1>
 						<div id="frame">
-							<div id="loadingMessage">
-								🎥 비디오 스트림에 액세스 할 수 없습니다<br />웹캠이 활성화되어 있는지 확인하십시오<br><br><br><h2>관리자에게 문의하세요.</h2>
-							</div>
-							<canvas id="canvas"></canvas>
+							<canvas id="canvas">
+								<div id="loadingMessage">
+									🎥 비디오 스트림에 액세스 할 수 없습니다<br />웹캠이 활성화되어 있는지 확인하십시오<br><br><br><h2>관리자에게 문의하세요.</h2>
+								</div>
+							</canvas>
 						</div>
 					</div>
 				</main>
@@ -247,7 +248,6 @@ document.addEventListener("DOMContentLoaded", function() {
 		requestAnimationFrame(tick);
 	});
 	function tick() {
-		loadingMessage.innerText = " 스캔 기능을 활성화 중입니다."
 		if (video.readyState === video.HAVE_ENOUGH_DATA) {
 			loadingMessage.hidden = true;
 			canvasElement.hidden = false;

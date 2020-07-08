@@ -31,8 +31,7 @@ public class EchoHandler extends TextWebSocketHandler {
 	throws Exception
 	{
 		String uri = session.getUri().toString();
-		//ws:\\\\192.168.0.244:5000\\ver2\\echo?roomCreate:kosmo59
-		String real = uri.split("\\?")[1];//roomCreate:kosmo59
+		String real = uri.split("\\?")[1];//병원정보 
 		String status = real.split("\\:")[0];//roomCreate
 		hp_code = real.split("\\:")[1];//kosmo59
 		if("hp_code".equals(status)) {
@@ -63,16 +62,13 @@ public class EchoHandler extends TextWebSocketHandler {
 			
 
 		}
-		//메시지가 null이 아닌 경우
 		else {
 			if(msg_chat.equals(kind)) {
 				String msg = st.nextToken();
-				/*
-				 * for(WebSocketSession sess:sessionList) { 
-				 * sess.sendMessage(new
-				 * TextMessage(session+msg)); }
-				 */
 				String code[] = msg.split(":");
+				for(int j=0;j<code.length;j++) {
+					logger.info(j+"번째"+code[j]);
+				}
 				int i=0;
 				Iterator<Entry<String, List<WebSocketSession>>> entries = sessionMap.entrySet().iterator();
 				while(entries.hasNext()){
@@ -82,7 +78,9 @@ public class EchoHandler extends TextWebSocketHandler {
 					if(entry.getKey().equals(code[5])) {		//키값 = 세션 = 병원 // 해당 병우너에
 						WebSocketSession sess = entry.getValue().get(i);
 						logger.info(sess+"");
-						sess.sendMessage(new TextMessage(session+msg_chat+":"+msg));
+						String qrcode = code[6];
+						KioskDao dao = new KioskDao();
+						sess.sendMessage(new TextMessage(msg_chat+":"+msg));
 					}
 					i++;
 				}
@@ -90,11 +88,6 @@ public class EchoHandler extends TextWebSocketHandler {
 			}else if(msg_pri.equals(kind)) {
 				String msg = st.nextToken();
 				logger.info(kind+"|"+msg_pri);
-				/*
-				 * for(WebSocketSession sess:sessionList) { 
-				 * sess.sendMessage(new
-				 * TextMessage(session+msg)); }
-				 */
 				String code[] = msg.split(":");
 				int i=0;
 				Iterator<Entry<String, List<WebSocketSession>>> entries = sessionMap.entrySet().iterator();

@@ -25,6 +25,22 @@ public class KioskDao {
 		rList = sqlSessionTemplate.selectList("resList",pMap);
 		return rList;
 	}
+	public int resstatus(Map<String, Object> pMap) {
+		int rList = 0;
+		rList = sqlSessionTemplate.selectOne("resstate",pMap);
+		return rList;
+	}
+	public int qrupdate(Map<String, Object> pMap) {
+		int rList = 0;
+		rList = sqlSessionTemplate.update("qrupdate",pMap);
+		return rList;
+	}
+	public List<Map<String, Object>> fresList(Map<String, Object> pMap) {
+		List<Map<String,Object>> result = null;
+		
+		result = sqlSessionTemplate.selectList("fresList",pMap);
+		return result;
+	}
 	
 	
 }
