@@ -38,7 +38,14 @@ public class KioskLogic {
 	public int qrupdate(Map<String, Object> pMap) {
 		int result =-1;
 		result = kioskDao.qrupdate(pMap);
+		if(result==1) {
+			Map<String,Object> qrMap = null;
+			qrMap=kioskDao.qrList(pMap);
+			result = kioskDao.hisUPD(qrMap);
 			return result;
+		}else {
+			return -1;
+		}
 	}
 	
 }

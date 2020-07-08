@@ -69,23 +69,25 @@ var qr =0;
 		//location.href="/result/result?qrcode="+qrcode
 	}
 	function back(){
-		location.href="./kiosk.jsp"
+		location.href="https://192.168.0.247:7000/k_main.jsp"
 
 	}
 	function resok(){
-			location.href="./qrscan.jsp";
+			location.href="https://192.168.0.247:7000/k_scanner.jsp";
 	}
 	function updQr(){
 		$.ajax({
 			url:'/Rkiosk/update?qrcode='+qr
 			,success:function(data){
 				if(data.trim()=="성공"){
-					alert("성공"	)
+					alert("예약 확인에 성공하였습니다.");
+					location.href="https://192.168.0.247:7000/k_main.jsp";
 				}
 			}
 		
 		})
 	}
+	
 </script>
 <script>
 	function connectWS(){

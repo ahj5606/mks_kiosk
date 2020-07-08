@@ -33,12 +33,13 @@
 			var str = ""+data;
 			var imsi = str.split(":");
 			var separ = imsi[0];
-			var mem_name = imsi[1];
+			var mem_name = imsi[1]+"님";
 			var doc_name = imsi[2];
 			var res_time = imsi[3];
 			var dept_name = imsi[4];
 			var sch_date = imsi[5];
 			var qrcode = imsi[5];
+			
 			//alert("separ ="+separ +" mem_name = "+mem_name+"  doc_name= "+doc_name+" res_time= "+res_time+" dept_name= "+dept_name+ " sch_date= "+sch_date+" qrcode = "+qrcode)
 			 var tableText ="<tr>";
 			if(separ.trim()=='100'){

@@ -35,10 +35,23 @@ public class KioskDao {
 		rList = sqlSessionTemplate.update("qrupdate",pMap);
 		return rList;
 	}
+	public Map<String, Object> qrList(Map<String, Object> pMap){
+		Map<String, Object> qrMap = null;
+		qrMap = sqlSessionTemplate.selectOne("qrList",pMap);
+		return qrMap;
+		
+	}
 	public List<Map<String, Object>> fresList(Map<String, Object> pMap) {
 		List<Map<String,Object>> result = null;
 		
 		result = sqlSessionTemplate.selectList("fresList",pMap);
+		return result;
+	}
+	public int hisUPD(Map<String, Object> qrMap) {
+		int result = -1;
+		
+		result = sqlSessionTemplate.insert("hisINS",qrMap);
+		
 		return result;
 	}
 	
