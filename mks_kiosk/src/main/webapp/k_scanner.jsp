@@ -52,7 +52,6 @@ var qr =0;
 				var dept_name = row.DEPT_NAME;
 				var sch_date = row.SCH_DATE;
 				let msg =mem_name+":"+doc_name+":"+res_time+":"+dept_name+":"+sch_date+":<%=hp_code%>"+":"+qrcode ;
-				alert(msg);
 				if(msg.trim().length<1){	//빈공간 문자열 출력 
 					socket.send(msg_null+msg);
 					
@@ -120,7 +119,6 @@ var qr =0;
 	<div class="jumbotron pt-5 pb-5 text-white rounded " style="background-color: #007bff;">
 		<div class="col-md-6 px-0 mx-auto">
 			<h1 class="display-4"><%=hp_name %></h1>
-			<p class="lead my-2">welcome to widaehang hospital. we service the best.</p>
         </div>
 	</div>
 	<!-- 본문 -->
@@ -281,6 +279,20 @@ document.addEventListener("DOMContentLoaded", function() {
 			// QR코드 인식에 성공한 경우
 
 			if (code) {
+				//QR코드의 영역을 감싸는 테두리 생성 ///////////
+				drawLine(code.location.topLeftCorner,
+						code.location.topRightCorner, "#FF0000");
+
+				drawLine(code.location.topRightCorner,
+						code.location.bottomRightCorner, "#FF0000");
+
+				drawLine(code.location.bottomRightCorner,
+						code.location.bottomLeftCorner, "#FF0000");
+
+				drawLine(code.location.bottomLeftCorner,
+						code.location.topLeftCorner, "#FF0000");
+				///////////////QR코드의 영역을 감싸는 테두리 생성 /////////////////
+				
 				var qrcode = code.data;
 				qrScan(qrcode);
 				 return;

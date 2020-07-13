@@ -43,12 +43,12 @@
 			//alert("separ ="+separ +" mem_name = "+mem_name+"  doc_name= "+doc_name+" res_time= "+res_time+" dept_name= "+dept_name+ " sch_date= "+sch_date+" qrcode = "+qrcode)
 			 var tableText ="<tr>";
 			if(separ.trim()=='100'){
-				tableText +="<td>"+mem_name+"</td>"
+	/* 			tableText +="<td>"+mem_name+"</td>"
 				tableText +="<td>"+doc_name+"</td>"
 				tableText +="<td>"+res_time+"</td>"
 				tableText +="<td>"+dept_name+"</td>"
 				tableText +="<td>"+sch_date+"</td>"
-				tableText +="</tr>"
+				tableText +="</tr>" */
 				//$("#patient").append(tableText);
 				$("#resList").bootstrapTable('refreshOptions', {
 				    url:'/result/fresList?hp_code=<%=hp_code%>'	
@@ -57,13 +57,13 @@
 			 	 })
 			 	speech(mem_name);
 			}else if(separ=='102'){
-				msg_count = msg_count+1;
+/* 				msg_count = msg_count+1;
 				document.getElementById('msg_count').innerText=msg_count;
 				tableText +='<td onClick="test('+"'"+mem_name+"'"+","+"'"+res_time+"'"+')" >'+mem_name;
 				tableText +="<td>"+doc_name+"</td>"
 				tableText +="<td>"+res_time+"</td>"
 				tableText +="</tr>"
-				$("#chatList").append(tableText);
+				$("#chatList").append(tableText); */
 			} 
 		};
 		//브라우저 닫을시

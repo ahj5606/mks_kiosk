@@ -51,8 +51,8 @@
        </div>
 	<div class="col-md-12" style="align-content: center;">
         <h2 class="form-signin-heading"style="margin-bottom:40px;margin-top:120px;">로그인</h2>
-       	<input type="text" id="k_id" style=" margin-bottom:20px;" class="form-control" placeholder="아이디" required autofocus>
-        <input type="password" id="k_pw" style=" margin-bottom:20px;" class="form-control" placeholder="비밀번호" required>
+       	<input type="text" id="k_id" style=" margin-bottom:20px;" class="form-control" value="seaum" placeholder="아이디" required autofocus>
+        <input type="password" id="k_pw" style=" margin-bottom:20px;" class="form-control" value="123" placeholder="비밀번호" required>
         <button class="btn btn-lg btn-primary btn-block" style="margin-bottom:20px;" onclick="login()">로그인</button>
 	</div>
 	<div class="col-md-4" >

@@ -56,7 +56,6 @@
 	<div class="jumbotron pt-5 pb-5 text-white rounded " style="background-color: #007bff;">
 		<div class="col-md-6 px-0 mx-auto">
 			<h1 class="display-4"><%=hp_name %></h1>
-			<p class="lead my-2">welcome to widaehang hospital. we service the best.</p>
         </div>
 	</div>
 	<!-- 본문 -->
