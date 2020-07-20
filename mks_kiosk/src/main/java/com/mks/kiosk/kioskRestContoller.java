@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.gson.Gson;
+
 @RestController
 @RequestMapping(value="/Rkiosk/*",produces="text/plain;charset=UTF-8")
 public class kioskRestContoller {
@@ -57,5 +59,17 @@ public class kioskRestContoller {
 		}else {
 			return "성공";
 		}
+	}
+	@RequestMapping("wait")
+	public String wait(Model model, @RequestParam(value="hp_code", defaultValue="false") String hp_code ) {
+		
+		Map<String, Object> pMap = new HashMap<>();
+		pMap.put("hp_code", hp_code);
+		pMap.put("dept_name", "원무과");
+		List<Map<String, Object>> waitCheck = null;
+		waitCheck = kioskLogic.waitCheck(pMap);
+		Gson gson = new Gson();
+		String imsi = gson.toJson(waitCheck);
+		return imsi;
 	}
 }

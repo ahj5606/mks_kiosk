@@ -54,6 +54,13 @@ public class KioskDao {
 		
 		return result;
 	}
+	public List<Map<String, Object>> waitCheck(Map<String, Object> pMap) {
+		//대기표 발급화면 - 대기인원 현황
+		logger.info("waitCheck 호출성공");
+		List<Map<String, Object>> waitCheck = null;
+		waitCheck = sqlSessionTemplate.selectList("waitCheck", pMap);
+		return waitCheck;
+	}
 	
 	
 }

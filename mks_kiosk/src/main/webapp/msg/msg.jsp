@@ -75,7 +75,7 @@
 			console.log("Server Error");
 		};		
 	}
-
+//////////////////////TTS서비스 //////////////////////
 	var voices = [];
 	function setVoiceList() {
 		voices = window.speechSynthesis.getVoices();

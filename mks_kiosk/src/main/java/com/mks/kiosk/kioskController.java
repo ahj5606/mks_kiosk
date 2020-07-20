@@ -44,5 +44,6 @@ public class kioskController {
 		model.addAttribute("rList",rList);
 		return "result";
 	}
+
 	
 }

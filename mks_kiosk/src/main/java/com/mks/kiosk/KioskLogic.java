@@ -47,5 +47,12 @@ public class KioskLogic {
 			return -1;
 		}
 	}
+
+	public List<Map<String,Object>> waitCheck(Map<String, Object> pMap) {
+	      logger.info("waitCheck logic");
+	      List<Map<String,Object>> waitCheck=null;
+	      waitCheck=kioskDao.waitCheck(pMap);
+	      return waitCheck;
+	   }
 	
 }

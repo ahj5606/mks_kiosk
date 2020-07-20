@@ -48,4 +48,13 @@
 			       ,#{HP_NAME}
 			)
 	</insert>
+	
+	<select id="waitCheck" parameterType="map" resultType="map">
+	<!-- 대기시간, 대기인원 보여주기. -->
+		SELECT 
+		    dept_lastwait, (dept_lastwait - dept_prewait)*3 as wait_time
+		  FROM mks_dept
+		  WHERE hp_code = #{hp_code}
+		  AND dept_name = '원무과' 	
+	</select>
 </mapper>

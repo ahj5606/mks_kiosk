@@ -48,12 +48,10 @@ public class EchoHandler extends TextWebSocketHandler {
 		logger.info("{} 로 부터 {} 받음", session.getId(), message.getPayload());
 		String msg_chat = "100";//일반대화
 		String msg_null = "101";//빈 문자가 넘어올 때
-		String msg_pri ="102";
 		String msg_exit = "500";//방 나갈때
 		StringTokenizer st = new StringTokenizer(message.getPayload(),"#");
 		String kind = st.nextToken();
 		//메시지 null 체크
-		logger.info(kind+"|"+msg_pri);
 		if(msg_null.equals(kind)) {
 			String info ="빈 공간을 입력하였습니다.";
 			for(WebSocketSession sess:sessionList) {
@@ -85,24 +83,7 @@ public class EchoHandler extends TextWebSocketHandler {
 					i++;
 				}
 				
-			}else if(msg_pri.equals(kind)) {
-				String msg = st.nextToken();
-				logger.info(kind+"|"+msg_pri);
-				String code[] = msg.split(":");
-				int i=0;
-				Iterator<Entry<String, List<WebSocketSession>>> entries = sessionMap.entrySet().iterator();
-				while(entries.hasNext()){
-					
-					Entry<String, List<WebSocketSession>>entry = (Entry<String, List<WebSocketSession>>)entries.next();
-					logger.info("sessionKey? : "+entry.getKey());
-					if(entry.getKey().equals(code[5])) {		//키값 = 세션 = 병원 // 해당 병우너에
-						WebSocketSession sess = entry.getValue().get(i);
-						logger.info(sess+"");
-						sess.sendMessage(new TextMessage(msg_pri+":"+msg));
-					}
-					i++;
-				}
-			}
+			}else 
 			//나가기 일때
 			if(msg_exit.equals(kind)) {
 				//String msg = st.nextToken();

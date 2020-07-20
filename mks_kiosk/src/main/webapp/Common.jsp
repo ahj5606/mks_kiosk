@@ -16,4 +16,7 @@
 <script src="<%=path %>resources/js/jsQR.js"></script>
 <link rel="stylesheet" type="text/css" href="<%=path %>resources/css/bootstrap-grid.css">
 <link rel="stylesheet" type="text/css" href="<%=path %>resources/css/bootstrap-reboot.css">
-
+<script src='<%=path.toString()%>resources/js/kakao_img.js'></script>
+<style>
+table{font-size: 20px;}
+</style>
